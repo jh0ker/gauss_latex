@@ -47,9 +47,9 @@ def print_matrix(matrix, explanations, produce_latex):
         print(r"\begin{equation}\left(\begin{array}{%s|c}" % ((n - 1) * 'c'))
 
         # matrix body
-        for line in matrix:
+        for row in matrix:
             pattern = ' & '.join('%{}s'.format(width) for width in widths)
-            print(pattern % tuple(map(fraction_tex, line)) + r' \\ ')
+            print(pattern % tuple(map(fraction_tex, row)) + r' \\ ')
 
         # matrix footer
         print(r'\end{array}\right)')
@@ -98,9 +98,9 @@ def column_widths(matrix, str_fn=str):
     m = len(matrix[0])
     widths = [0] * m
 
-    for line in matrix:
+    for row in matrix:
         for j in range(0, m):
-            widths[j] = max(widths[j], len(str_fn(line[j])))
+            widths[j] = max(widths[j], len(str_fn(row[j])))
 
     return widths
 

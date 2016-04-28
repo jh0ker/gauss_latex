@@ -24,7 +24,7 @@ def main():
         description='Uses the Gauss-Jordan algorithm to solve a system of '
                     'linear equations.')
 
-    parser.add_argument('line',
+    parser.add_argument('row',
                         type=str,
                         nargs='+',
                         help='Add equations to the system in the form '
@@ -135,20 +135,20 @@ def gauss(a, i=0, j=0, produce_latex=False):
 
 def fill_matrix(args, matrix):
     """ Fill the matrix with values from console arguments """
-    for line_str in args.line:
-        line = list()
+    for row_str in args.row:
+        row = list()
 
-        for coeff in line_str.split(';'):
-            line.append(Fraction(coeff or 0))
+        for coeff in row_str.split(';'):
+            row.append(Fraction(coeff or 0))
 
-        matrix.append(line)
+        matrix.append(row)
 
 
 def check_matrix(matrix):
-    """ Check if all lines of the matrix have the same length """
+    """ Check if all rows of the matrix have the same length """
     len_first = len(matrix[0])
-    if not all([len(line) == len_first for line in matrix]):
-        raise ValueError("Not all lines have the same number of coefficients")
+    if not all([len(row) == len_first for row in matrix]):
+        raise ValueError("Not all rows have the same number of coefficients")
 
 
 if __name__ == "__main__":
