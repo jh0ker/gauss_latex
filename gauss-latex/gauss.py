@@ -96,7 +96,7 @@ def gauss(a, i=0, j=0, produce_latex=False):
     n = len(a[0])  # Determine the width of the matrix
 
     if i == m or j == n:
-        yield (None, {})
+        yield (None, dict())
         return
 
     if a[i][j] == 0:
@@ -115,6 +115,7 @@ def gauss(a, i=0, j=0, produce_latex=False):
         yield (list(a), {i: exp_divide(divisor, produce_latex)})
 
     except ZeroDivisionError:
+        yield (a, dict())
         return
 
     explanations = dict()
