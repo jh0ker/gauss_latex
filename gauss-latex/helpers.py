@@ -6,18 +6,22 @@
 # This program is licensed under the MIT License:
 # https://opensource.org/licenses/MIT
 
+from roman import write_roman
 
-def bracket(fraction, produce_latex=False):
+
+def bracket(fraction, produce_latex):
     """ Convert a fraction to string and put it in brackets if negative """
 
     if fraction < 0:
         if produce_latex:
-            fraction_str = r'$ \left(%s\right) $' % fraction_tex(fraction)
+            fraction_str = r'\left(%s\right)' % fraction_tex(fraction)
         else:
             fraction_str = '(%s)' % str(fraction)
     else:
         if produce_latex:
             fraction_str = fraction_tex(fraction)
+        elif fraction.denominator != 1:
+            fraction_str = '(%s)' % str(fraction)
         else:
             fraction_str = str(fraction)
     return fraction_str
@@ -54,12 +58,7 @@ def print_matrix(matrix, explanations, produce_latex):
         print(r"\begin{array}{l}")
 
         for i in range(m):
-            explanation = explanations.get(i, '')
-
-            if explanation:
-                explanation = r' \textsl{%s}' % explanation
-
-            print(explanation + r" \\ ")
+            print(explanations.get(i, '') + r" \\ ")
 
         print(r'\end{array}\end{equation}')
 
@@ -78,7 +77,13 @@ def print_matrix(matrix, explanations, produce_latex):
 def fraction_tex(fraction):
     """ Get the LaTeX code for a Fraction instance """
     if fraction.denominator != 1:
-        return r'\frac{%d}{%d}' % (fraction.numerator, fraction.denominator)
+        if fraction < 0:
+            return r'-\frac{%d}{%d}' % \
+                   (-1 * fraction.numerator, fraction.denominator)
+        else:
+            return r'\frac{%d}{%d}' % \
+                   (fraction.numerator, fraction.denominator)
+
     else:
         return str(fraction.numerator)
 
@@ -98,3 +103,37 @@ def column_widths(matrix, str_fn=str):
             widths[j] = max(widths[j], len(str_fn(line[j])))
 
     return widths
+
+
+def exp_swap(source, dest, produce_latex):
+    if produce_latex:
+        source_roman = r'\textsc{%s}' % write_roman(source + 1)
+        dest_roman = r'\textsc{%s}' % write_roman(dest + 1)
+        operation = r' \leftrightarrows '
+    else:
+        source_roman = write_roman(source + 1)
+        dest_roman = write_roman(dest + 1)
+        operation = " <-> "
+    return source_roman + operation + dest_roman
+
+
+def exp_divide(divisor, produce_latex):
+    divisor_str = bracket(divisor, produce_latex)
+    if produce_latex:
+        operation = r'\div '
+    else:
+        operation = "/"
+    return operation + divisor_str
+
+
+def exp_minus(factor, row, produce_latex):
+    factor_str = bracket(factor, produce_latex)
+
+    if produce_latex:
+        pattern = r'- %s \cdot %s'
+        row_roman = r'\textsc{%s}' % write_roman(row + 1)
+    else:
+        pattern = '- %s * %s'
+        row_roman = write_roman(row + 1)
+
+    return pattern % (factor_str, row_roman)

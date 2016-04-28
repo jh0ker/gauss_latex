@@ -10,7 +10,7 @@ import argparse
 import sys
 from fractions import Fraction
 
-from helpers import print_matrix, bracket
+from helpers import print_matrix, exp_swap, exp_divide, exp_minus
 
 
 def main():
@@ -103,7 +103,7 @@ def gauss(a, i=0, j=0, produce_latex=False):
         for r in range(i + 1, m):
             if a[r][j] != 0:
                 a[r], a[i] = a[i], a[r]
-                yield (list(a), {i: "Tausche mit Zeile %d" % (r + 1)})
+                yield (list(a), {i: exp_swap(i, r, produce_latex)})
                 break
         else:
             for recursion in gauss(a, i, j + 1, produce_latex):
@@ -112,9 +112,7 @@ def gauss(a, i=0, j=0, produce_latex=False):
     try:
         divisor = a[i][j]
         a[i] = [coeff / divisor for coeff in a[i]]
-
-        divisor_str = bracket(divisor, produce_latex)
-        yield (list(a), {i: "Teile durch %s" % divisor_str})
+        yield (list(a), {i: exp_divide(divisor, produce_latex)})
 
     except ZeroDivisionError:
         return
@@ -126,8 +124,7 @@ def gauss(a, i=0, j=0, produce_latex=False):
                 for (coeff_k, coeff_i)
                 in zip(a[k], a[i])]
 
-        factor_str = bracket(factor, produce_latex)
-        explanations[k] = "- %s * Zeile %d" % (factor_str, i + 1)
+        explanations[k] = exp_minus(factor, i, produce_latex)
 
     yield (list(a), explanations)
 
