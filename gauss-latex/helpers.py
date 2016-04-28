@@ -39,10 +39,7 @@ def print_matrix(matrix, explanations, produce_latex):
 
     if produce_latex:
         widths = column_widths(matrix, fraction_tex)
-    else:
-        widths = column_widths(matrix)
 
-    if produce_latex:
         # matrix header
         print(r"\begin{equation}\left(\begin{array}{%s|c}" % ((n - 1) * 'c'))
 
@@ -63,6 +60,8 @@ def print_matrix(matrix, explanations, produce_latex):
         print(r'\end{array}\end{equation}')
 
     else:
+        widths = column_widths(matrix)
+
         for i in range(m):
             pattern = '  '.join('%{}s'.format(width) for width in widths[:-1])
             pattern += ' | %{}s'.format(widths[-1])
