@@ -17,7 +17,7 @@ def main():
 
     # Prevents argparse to break if an equation starts with a minus
     for i in range(len(sys.argv)):
-        if ';' in sys.argv[i]:
+        if ';' in sys.argv[i] and not sys.argv[i].startswith(';'):
             sys.argv[i] = ' ' + sys.argv[i]
 
     parser = argparse.ArgumentParser(
